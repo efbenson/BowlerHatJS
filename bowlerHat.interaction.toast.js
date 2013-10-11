@@ -9,12 +9,28 @@ bowlerHat.interaction.toast = (function() {
 	
 	/**
 	 * Show a toast
-	 * @param  {string} type    info, success, warning, error
+	 * @param  {string} type    info, success, error
 	 * @param  {string} message toast message
 	 * @param  {boolean} sticky is the toast sticky
 	 */
 	var _toast = function(type, message, isSticky){
-		//TODO: show modal	
+		// implementing: https://github.com/ifightcrime/bootstrap-growl
+		 
+		var delay = 4000;
+		if (isSticky){
+			delay = 0;
+		}
+		
+		$.bootstrapGrowl(message, {
+		  ele: 'body', // which element to append to
+		  type: type, // (null, 'info', 'error', 'success')
+		  offset: {from: 'top', amount: 20}, // 'top', or 'bottom'
+		  align: 'right', // ('left', 'right', or 'center')
+		  width: auto, // (integer, or 'auto')
+		  delay: 4000,
+		  allow_dismiss: true,
+		  stackup_spacing: 10 // spacing between consecutively stacked growls.
+		});		
 	};
 
 	 /**
@@ -27,7 +43,7 @@ bowlerHat.interaction.toast = (function() {
 	 * @param  {Boolean} isSticky is the toast sticky
 	 */
 	var _info = function(message, isSticky){
-		_toast("info", message, isSticky);
+		_toast('info', message, isSticky);
 	};
 
 	/**
@@ -36,7 +52,7 @@ bowlerHat.interaction.toast = (function() {
 	 * @param  {Boolean} isSticky is the toast sticky
 	 */
 	var _error = function(message, isSticky){
-		_toast("error", message, isSticky);
+		_toast('error', message, isSticky);
 	};
 
 	/**
@@ -45,22 +61,13 @@ bowlerHat.interaction.toast = (function() {
 	 * @param  {Boolean} isSticky is the toast sticky
 	 */
 	var _success = function(message, isSticky){
-		_toast("success", message, isSticky);
+		_toast('success', message, isSticky);
 	};
 
-	/**
-	 * Show a warning toast
-	 * @param  {string}  message  the message to show
-	 * @param  {Boolean} isSticky is the toast sticky
-	 */
-	var _warning = function(message, isSticky){
-		_toast("warning", message, isSticky);	
-	};
 
 	return {
 		info : _info,
 		error : _error,
 		success : _success,
-		warning : _warning
 	};
 })();

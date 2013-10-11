@@ -4,6 +4,27 @@ bowlerHat.communication.ajax = (function(){
 	'use strict';
 
 	/**
+	 * Process json result
+	 * @param  {json} data return result
+	 */
+	var _processResults = function (data) {
+		if (data.success === 'undefined'){
+			return;
+		}
+
+		if(data.success && data.message !== ''){
+			bowlerHat.interaction.toast.success(message);
+			return;
+		}
+
+		if(!data.success && data.message !== ''){
+			bowlerHat.interaction.toast.error(message);
+			return;			
+		}
+	};
+
+
+	/**
 	 * Main call for ajax communication
 	 * @param  {string}   url          action url
 	 * @param  {json}   parameters   parameters
@@ -13,7 +34,27 @@ bowlerHat.communication.ajax = (function(){
 	 * @param  {Function} callback     function callback
 	 */
 	var _communicate = function(url, parameters, action, isJson, foregroundContainer, callback){
-		// TODO Implement the ajax call
+		$.ajax({
+            type: action,
+            url: url,
+            data: parameters,
+
+            error: function (data) {
+
+            	// ignore navigation caused connection failures
+                if (data.status != 0) {
+                    bowlerHat.interaction.toast.error("Error:" + data.resultText);
+                }
+            },
+            success: function (data) {
+                if (isJson) {
+                	processResults(data)
+                };
+
+                callback(data);
+            }
+        });
+
 	};
 
 
@@ -89,5 +130,5 @@ bowlerHat.communication.ajax = (function(){
 		getJsonForeground : _getJsonForeground,
 		getJsonForegroundInContainer : _getJsonForegroundInContainer,
 		getJsonBackground : _getJsonBackground
-	}
+	};
 })();
